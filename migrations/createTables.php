@@ -1,16 +1,14 @@
 <?php
-$user = 'root';
-$password = 'qwerty';
-$server = 'localhost';
+require_once "config.php";
 
-$con = new mysqli ($server, $user, $password);
+$con = new mysqli (Config::HOST_SERVER, Config::USER_NAME, Config::PASSWORD);
 if ($con->connect_error) {
 	echo ("Connection failed: " . mysqli_connect_error());
 }
 else {
-	if (mysqli_query($con, "CREATE DATABASE CouponManagementSystem")) {
-		echo "DB CouponManagementSystem created";
-		mysqli_select_db($con, "CouponManagementSystem");
+	if (mysqli_query($con, "CREATE DATABASE ".Config::DATABASE_NAME)) {
+		echo "DB " . Config::DATABASE_NAME . "created";
+		mysqli_select_db($con, Config::DATABASE_NAME);
 		$couponQuery = "CREATE TABLE `Coupon` (
 			`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 			`couponCode` varchar(10) DEFAULT NULL,
