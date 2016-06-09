@@ -13,6 +13,7 @@ else {
 			`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 			`couponCode` varchar(10) DEFAULT NULL,
 			`couponType` varchar(45) DEFAULT NULL,
+			`redemptionsLeft` int(11) DEFAULT NULL,
 			`validUpto` timestamp NULL DEFAULT NULL,
 			`createdOn` timestamp NULL DEFAULT NULL,
 			`updatedOn` timestamp NULL DEFAULT NULL,
@@ -39,16 +40,6 @@ else {
 		    CONSTRAINT `user_u` FOREIGN KEY (`userID`) REFERENCES `User` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 		mysqli_query($con, $transactionQuery);
-		$multiUseLog = "CREATE TABLE `MultiUseCouponLog` (
-		    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-		    `couponID` int(11) unsigned NOT NULL,
-		    `redemptionsAllowed` int(11) NOT NULL,
-		    `redemptionsLeft` int(11) NOT NULL,
-		    `lastRedemptionAt` timestamp NULL DEFAULT NULL,
-		    PRIMARY KEY (`id`),
-		    CONSTRAINT `multi_u` FOREIGN KEY (`couponID`) REFERENCES `Coupon` (`id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-		mysqli_query($con, $multiUseLog);
 	}
 	else {
 		echo mysqli_error($con).PHP_EOL;

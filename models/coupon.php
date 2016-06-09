@@ -3,6 +3,7 @@ class Coupon {
 	private $id;
 	public $couponCode;
 	public $couponType;
+	public $redemptionsLeft;
 	public $validUpto;
 	public $createdOn;
 	public $updatedOn;
@@ -19,6 +20,10 @@ class Coupon {
 						$flag = $handle->doQuery("SELECT * FROM Coupon WHERE couponCode = '".$code."'");
 					}
 					$data['couponCode'] = $code;
+					$this->setCouponCode($code);
+				}
+				if (array_key_exists('redemptionsLeft', $data) && (!array_key_exists('couponType', $data) || $data['couponType'] != 'multi-use')) {
+					// error bad request
 				}
 				$keys = '';
 				$values = '';
@@ -32,16 +37,6 @@ class Coupon {
 				$handle->doQuery("INSERT INTO Coupon (".$keys." , createdOn) values (".$values."), NOW()");
 				$result = $handle->doQuery("SELECT MAX(id) as m FROM Coupon");
 				$this->setID($result[0]['m']);
-				if (array_key_exists('couponType', $data)) {
-					if ($data['couponType'] == 'multi-use') {
-						if (array_key_exists('num', $data)) {
-							couponTransaction::createLog($this->getID, $data['num']);
-						}
-						else {
-							// error. error bad request
-						}
-					}
-				}
 				$handle->close();
 			}
 			else {
@@ -76,6 +71,14 @@ class Coupon {
 
 	public function getID() {
 		return $this->id;
+	}
+
+	private function setCouponCode($couponCode) {
+		$this->couponCode = $couponCode;
+	}
+
+	public function getCouponCode() {
+		return $this->couponCode;
 	}
 
 }
