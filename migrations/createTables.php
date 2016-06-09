@@ -23,8 +23,8 @@ else {
 		$userQuery = "CREATE TABLE `User` (
 			`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 			`auth` varchar(10) DEFAULT NULL,
-			`name` varchar(10) DEFAULT NULL,
-			`email` varchar(10) DEFAULT NULL,
+			`name` varchar(20) DEFAULT NULL,
+			`email` varchar(50) DEFAULT NULL,
 			`createdOn` timestamp NULL DEFAULT NULL,
 			`updatedOn` timestamp NULL DEFAULT NULL,
 			PRIMARY KEY (`id`)
