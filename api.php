@@ -11,14 +11,17 @@ require_once dirname(__FILE__) . "/helpers/misc.php";
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
+$user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
+$auth = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
+
 switch ($method) {
 	case 'POST':
-    	$result = APIController::create($request[1], $input);
+    	$result = APIController::create($request[1], $input, $user, $auth);
     	http_response_code($result['code']);
     	echo json_encode($result['data']);
     	break;
 	case 'PUT':
-    	$result = APIController::update($request[1], $input);
+    	$result = APIController::update($request[1], $input, $user, $auth);
     	http_response_code($result['code']);
     	echo json_encode($result['data']);
     	break;
