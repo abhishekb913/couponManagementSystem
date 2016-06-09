@@ -1,5 +1,5 @@
 <?php
-require_once "config.php";
+require_once dirname(__FILE__) . "/../config.php";
 
 $con = new mysqli (Config::HOST_SERVER, Config::USER_NAME, Config::PASSWORD);
 if ($con->connect_error) {
@@ -12,7 +12,7 @@ else {
 		$couponQuery = "CREATE TABLE `Coupon` (
 			`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 			`couponCode` varchar(10) DEFAULT NULL,
-			`couponType` int(11) DEFAULT NULL,
+			`couponType` varchar(45) DEFAULT NULL,
 			`validUpto` timestamp NULL DEFAULT NULL,
 			`createdOn` timestamp NULL DEFAULT NULL,
 			`updatedOn` timestamp NULL DEFAULT NULL,
@@ -44,6 +44,7 @@ else {
 		    `couponID` int(11) unsigned NOT NULL,
 		    `redemptionsAllowed` int(11) NOT NULL,
 		    `redemptionsLeft` int(11) NOT NULL,
+		    `lastRedemptionAt` timestamp NULL DEFAULT NULL,
 		    PRIMARY KEY (`id`),
 		    CONSTRAINT `multi_u` FOREIGN KEY (`couponID`) REFERENCES `Coupon` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8";
