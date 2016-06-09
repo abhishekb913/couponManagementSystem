@@ -36,8 +36,7 @@ else {
 		    `couponID` int(11) unsigned NOT NULL,
 		    `transactionOn` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		    PRIMARY KEY (`id`),
-		    CONSTRAINT `coupon_u` FOREIGN KEY (`couponID`) REFERENCES `Coupon` (`id`),
-		    CONSTRAINT `user_u` FOREIGN KEY (`userID`) REFERENCES `User` (`id`)
+		    CONSTRAINT `coupon_u` FOREIGN KEY (`couponID`) REFERENCES `Coupon` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 		mysqli_query($con, $transactionQuery);
 	}

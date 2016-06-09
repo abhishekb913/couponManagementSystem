@@ -21,9 +21,9 @@ class APIController{
 	public static function update($component, $data, $user, $auth) {
 		switch ($component) {
 			case 'update':
-				if (!array_key_exists('id', $data)) return array('code' => 400, 'data' => array('msg' => 'Bad request'));
-				$id = $data['id'];
-				unset($data['id']);
+				if (!array_key_exists('couponID', $data)) return array('code' => 400, 'data' => array('msg' => 'Bad request'));
+				$id = $data['couponID'];
+				unset($data['couponID']);
 				$coupon = new Coupon();
 				return $coupon->update($id, $data);
 				break;
