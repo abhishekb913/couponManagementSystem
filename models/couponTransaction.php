@@ -15,6 +15,10 @@ class couponTransaction {
 			return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'couponCode must be set'));
 		}
 		$handle = new Database();
+		if (array_key_exists('userID', $data)) {
+			$result = $handle->select("SELECT * FROM User WHERE id = ".$data['userID']);
+			if (!$result) return array('code' => 404, 'data' => array('msg' => 'User Not Found'));
+		}
 		$coupon = $handle->select("SELECT * FROM Coupon WHERE couponCode = '".$data['couponCode']."'");
 		if (!$coupon) return array('code' => 404, 'data' => array('msg' => 'Coupon Not Found'));
 		if ($coupon['couponType'] == 'single-use') {
