@@ -26,7 +26,7 @@ class Coupon {
 					$this->setCouponCode($code);
 				}
 				if ( ($data['couponType'] == 'multi-use' && !array_key_exists('redemptionsLeft', $data)) || (array_key_exists('redemptionsLeft', $data) && $data['couponType'] != 'multi-use')) {
-					return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'incomplete input for multi-use'));
+					return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'multi-use and redemptionsLeft would go together'));
 				}
 				$keys = '';
 				$values = '';
