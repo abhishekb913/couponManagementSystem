@@ -67,10 +67,10 @@ class Coupon {
 						return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'multi use must have redemptionsLeft'));
 					}
 					else if ($existingRow['couponType'] != 'multi-use' && $type != 'multi-use' && $red != -1) {
-						return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'Only multi use can have redemptionsLeft'));
+						return array('code' => 403, 'data' => array('msg' => 'Forbidden', 'details' => 'Only multi use can have redemptionsLeft'));
 					}
 					else if ($existingRow['couponType'] == 'multi-use' && $red != -1 && $type != 'none' && $type != 'multi-use') {
-						return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'Only multi use can have redemptionsLeft'));
+						return array('code' => 403, 'data' => array('msg' => 'Forbidden', 'details' => 'Only multi use can have redemptionsLeft'));
 					}
 					else if ($existingRow['couponType'] == 'multi-use' && $type != 'multi-use' && $type != 'none') {
 						$data['redemptionsLeft'] = "NULL";
