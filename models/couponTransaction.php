@@ -26,6 +26,7 @@ class couponTransaction {
 			if ($transaction) return array('code' => 403, 'data' => array('msg' => 'Forbidden', 'details' => 'Coupon cannot be redeemed anymore'));
 		}
 		else if ($coupon['couponType'] == 'single-use-per-user') {
+			if (is_null($user)) return array('code' => 403, 'data' => array('msg' => 'Forbidden', 'details' => 'Authentication required'));
 			if (!array_key_exists('userID', $data)) return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'UserID must be set for single-use-per-user'));
 			if (is_null($user)) return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'User authentication required'));
 			$transaction = $handle->select("SELECT * FROM CouponTransaction WHERE couponID = ".$coupon['id']. " and userID = ".$user);
@@ -37,7 +38,8 @@ class couponTransaction {
 		if (!is_null($coupon['validUpto']) && date('Y-m-d H:i:s') > $coupon['validUpto']) {
 			return array('code' => 403, 'data' => array('msg' => 'Forbidden', 'details' => 'Coupon not valid anymore'));
 		}
-		$userID = array_key_exists('userID', $data) ? $data['userID'] : -1;
+		$userID = array_key_exists('userID', $data) ? $data['userID'] : 0;
+		$userID = $user ? $user : 0;
 		$handle->doQuery("INSERT INTO CouponTransaction (userID, couponID, transactionOn) VALUES ($userID, ".$coupon['id'].", NOW())");
 		if ($coupon['couponType'] == "multi-use") $handle->doQuery("UPDATE coupon SET redemptionsLeft = ".($coupon['redemptionsLeft'] - 1). ", updatedOn = NOW() WHERE id = ".$coupon['id']);
 		$handle->close();
