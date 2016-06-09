@@ -4,6 +4,8 @@ require_once dirname(__FILE__) . "/controllers/apiController.php";
 require_once dirname(__FILE__) . "/helpers/database.php";
 require_once dirname(__FILE__) . "/config.php";
 require_once dirname(__FILE__) . "/models/coupon.php";
+require_once dirname(__FILE__) . "/models/user.php";
+require_once dirname(__FILE__) . "/models/couponTransaction.php";
 require_once dirname(__FILE__) . "/helpers/misc.php";
 
 $method = $_SERVER['REQUEST_METHOD'];

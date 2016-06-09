@@ -6,7 +6,7 @@ class couponTransaction {
 	public $transactionOn;
 
 	public function apply($userID, $auth, $couponID) {
-		if (!User::authenticate($userID, $auth)) // Authentication error
+		if (!User::authenticate($userID, $auth)); // Authentication error
 		
 	}
 

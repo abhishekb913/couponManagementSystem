@@ -9,7 +9,7 @@ class User {
 
 	public static function authenticate($id, $auth) {
 		$handle = new Database();
-		$result = $handle->doQuery("SELECT * FROM User WHERE id = ".$id." and auth = '".$auth."'");
+		$result = $handle->select("SELECT * FROM User WHERE id = ".$id." and auth = '".$auth."'");
 		if ($result) return true;
 		else return false;
 	}

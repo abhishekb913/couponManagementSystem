@@ -56,18 +56,37 @@ class Coupon {
 		if (is_array($data)) {
 			if (!array_key_exists('id', $data) && !array_key_exists('createdOn', $data) && !array_key_exists('updatedOn', $data)) {
 				$handle = new Database;
-				// if multi-use changed to any other redemptionsLeft to be 0
-				// if (array_key_exists('redemptionsLeft', $data) && array_key_exists('couponType', $data) && $data['couponType'] != 'multi-use') {
-				// 	return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'redemptionsLeft not possible for non multi-use type'));
-				// }
-				// if (array_key_exists('couponType', $data) && $data['couponType'] != 'multi-use') {
-				// 	$data['redemptionsLeft'] = 0;
-				// }
+				$existingRow = $handle->select("SELECT * FROM Coupon WHERE id = ".$id);
+				if (!$existingRow) {
+					return array('code' => 404, 'data' => array('msg' => 'Coupon Not Found'));
+				}
+				else {
+					$type = array_key_exists('couponType', $data) ? $data['couponType']: 'none';
+					$red = array_key_exists('redemptionsLeft', $data) ? $data['redemptionsLeft']: -1;
+					if ($existingRow['couponType'] != 'multi-use' && $type == 'multi-use' && $red == -1) {
+						return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'multi use must have redemptionsLeft'));
+					}
+					else if ($existingRow['couponType'] != 'multi-use' && $type != 'multi-use' && $red != -1) {
+						return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'Only multi use can have redemptionsLeft'));
+					}
+					else if ($existingRow['couponType'] == 'multi-use' && $red != -1 && $type != 'none' && $type != 'multi-use') {
+						return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'Only multi use can have redemptionsLeft'));
+					}
+					else if ($existingRow['couponType'] == 'multi-use' && $type != 'multi-use' && $type != 'none') {
+						$data['redemptionsLeft'] = "NULL";
+					}
+				}
 				$str = '';
 				foreach ($data as $key => $value) {
-					$str .= $key . "=";
-					if (is_string($value)) $str .= '"'. $value . '",';
-					else $str .= $value . ",";
+					if ($key == 'redemptionsLeft') {
+						$str .= $key . "=";
+						$str .= $value . ",";
+					}
+					else {
+						$str .= $key . "=";
+						if (is_string($value)) $str .= '"'. $value . '",';
+						else $str .= $value . ",";
+					}
 				}
 				$str = rtrim($str, ",");
 				$handle->doQuery("UPDATE Coupon SET ".$str.", updatedOn = NOW() where id = ".$id);
