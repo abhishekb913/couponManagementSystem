@@ -1,5 +1,7 @@
 <?php
 
+// Change the credentials appropriately
+
 class Config
 {
 	const DATABASE_NAME = 'CouponManagementSystem';

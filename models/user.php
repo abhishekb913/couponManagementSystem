@@ -7,6 +7,7 @@ class User {
 	public $createdOn;
 	public $updatedOn;
 
+	// Authenticate user.
 	public static function authenticate($id, $auth) {
 		$handle = new Database();
 		$result = $handle->select("SELECT * FROM User WHERE id = ".$id);

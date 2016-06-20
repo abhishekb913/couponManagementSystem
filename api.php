@@ -9,8 +9,12 @@ require_once dirname(__FILE__) . "/models/couponTransaction.php";
 require_once dirname(__FILE__) . "/helpers/misc.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
+
+// request type (create/apply/update) is taken from PATH_INFO
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
+
+// Storing user and authentication token, in case it is present
 $user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : null;
 $auth = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
 

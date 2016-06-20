@@ -1,5 +1,7 @@
 <?php
 class Misc {
+
+	// couponCode generator
 	public static function generateCouponCode($length = 8) {
 	    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	    $charactersLength = strlen($characters);

@@ -8,13 +8,17 @@ class Coupon {
 	public $createdOn;
 	public $updatedOn;
 
+	// Create coupon
 	public function create($data) {
 		if (is_array($data)) {
+			// id, createdOn, updatedOn cannot be set manually. Although couponCode can be set manually
 			if (!array_key_exists('id', $data) && !array_key_exists('createdOn', $data) && !array_key_exists('updatedOn', $data)) {
+				// couponType is mandatory
 				if (!array_key_exists('couponType', $data)) {
 					return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'coupon type not mentioned'));
 				}
 				$handle = new Database;
+				// generating couponCode
 				if (!array_key_exists('couponCode', $data)) {
 					$flag = '123456';
 					$code = '';
@@ -25,6 +29,11 @@ class Coupon {
 					$data['couponCode'] = $code;
 					$this->setCouponCode($code);
 				}
+				else {
+					$flag = $handle->select("SELECT * FROM Coupon WHERE couponCode = '".$data['couponCode']."'");
+					if (!$flag) return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'Coupon already exists.'));
+				}
+				// redemptionsLeft must exist for multi-use and must not exist otherwise
 				if ( ($data['couponType'] == 'multi-use' && !array_key_exists('redemptionsLeft', $data)) || (array_key_exists('redemptionsLeft', $data) && $data['couponType'] != 'multi-use')) {
 					return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'multi-use and redemptionsLeft would go together'));
 				}
@@ -52,8 +61,10 @@ class Coupon {
 		}
 	}
 
+	// Update coupon
 	public function update ($id, $data) {
 		if (is_array($data)) {
+			// id, createdOn, updatedOn cannot be updated manually. Although couponCode can be set manually
 			if (!array_key_exists('id', $data) && !array_key_exists('createdOn', $data) && !array_key_exists('updatedOn', $data)) {
 				$handle = new Database;
 				$existingRow = $handle->select("SELECT * FROM Coupon WHERE id = ".$id);
@@ -61,17 +72,19 @@ class Coupon {
 					return array('code' => 404, 'data' => array('msg' => 'Coupon Not Found'));
 				}
 				else {
+					// taking care of multi-use coupon while updation.
 					$type = array_key_exists('couponType', $data) ? $data['couponType']: 'none';
 					$red = array_key_exists('redemptionsLeft', $data) ? $data['redemptionsLeft']: -1;
+					// if updation to multi-use but redemptionsLeft not set
 					if ($existingRow['couponType'] != 'multi-use' && $type == 'multi-use' && $red == -1) {
 						return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'multi use must have redemptionsLeft'));
-					}
+					} // if updation to non multi-use from non multi-use but redemptionsLeft is set
 					else if ($existingRow['couponType'] != 'multi-use' && $type != 'multi-use' && $red != -1) {
 						return array('code' => 403, 'data' => array('msg' => 'Forbidden', 'details' => 'Only multi use can have redemptionsLeft'));
-					}
+					} // if updation to non multi-use from multi-use but redemptionsLeft is set
 					else if ($existingRow['couponType'] == 'multi-use' && $red != -1 && $type != 'none' && $type != 'multi-use') {
 						return array('code' => 403, 'data' => array('msg' => 'Forbidden', 'details' => 'Only multi use can have redemptionsLeft'));
-					}
+					}// if updation to non multi-use. update redemptionsLeft to NULL
 					else if ($existingRow['couponType'] == 'multi-use' && $type != 'multi-use' && $type != 'none') {
 						$data['redemptionsLeft'] = "NULL";
 					}

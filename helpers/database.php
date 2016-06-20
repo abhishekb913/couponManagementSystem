@@ -1,4 +1,7 @@
 <?php
+
+// Database interations are to be made from this class
+
 class Database {
 	private static $con;
 	function __construct() {
@@ -22,6 +25,7 @@ class Database {
 		return;
 	}
 
+	// close connection
 	public function close() {
 		return mysqli_close(self::$con);
 	}
