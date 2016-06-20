@@ -73,9 +73,11 @@ class Coupon {
 				}
 				else {
 					// taking care of multi-use coupon while updation.
+
 					$type = array_key_exists('couponType', $data) ? $data['couponType']: 'none';
 					$red = array_key_exists('redemptionsLeft', $data) ? $data['redemptionsLeft']: -1;
 					// if updation to multi-use but redemptionsLeft not set
+					
 					if ($existingRow['couponType'] != 'multi-use' && $type == 'multi-use' && $red == -1) {
 						return array('code' => 400, 'data' => array('msg' => 'Bad request', 'details' => 'multi use must have redemptionsLeft'));
 					} // if updation to non multi-use from non multi-use but redemptionsLeft is set

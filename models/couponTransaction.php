@@ -7,6 +7,9 @@ class couponTransaction {
 
 	// applying of a coupon
 	public function apply($data, $user, $auth) {
+
+		//User Authentication
+
 		if (!is_null($user) && !is_null($auth)) {
 			$result = User::authenticate($user, $auth);
 			if ($result) return $result;
@@ -22,7 +25,9 @@ class couponTransaction {
 		}
 		$coupon = $handle->select("SELECT * FROM Coupon WHERE couponCode = '".$data['couponCode']."'");
 		if (!$coupon) return array('code' => 404, 'data' => array('msg' => 'Coupon Not Found'));
-		// Checking if coupon can be applied
+
+		// Checking if coupon can be applied based on coupon types
+		
 		if ($coupon['couponType'] == 'single-use') {
 			$transaction = $handle->select("SELECT * FROM CouponTransaction WHERE couponID = ".$coupon['id']);
 			if ($transaction) return array('code' => 403, 'data' => array('msg' => 'Forbidden', 'details' => 'Coupon cannot be redeemed anymore'));
